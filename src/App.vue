@@ -1,18 +1,35 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <input type="text" @input="filterPosts">
+    <div v-for="post in filteredPosts" :key="post.id">
+      <h1>{{post.title}}</h1>
+      <p>
+        {{post.body}}
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+  },
+  computed: mapGetters(["allPosts", "filteredPosts"]),
+  methods: {
+    ...mapActions(["fetchPosts", "filterString"]),
+    ...mapMutations(["filterString"]),
+    filterPosts(event) {
+      this.filterString(event.target.value)
+    }
+  },
+  async mounted() {
+    this.fetchPosts(10)
   }
+
 }
 </script>
 
