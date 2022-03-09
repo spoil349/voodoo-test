@@ -1,45 +1,56 @@
 <template>
-  <div id="app">
-    <input type="text" @input="filterPosts">
-    <div v-for="post in filteredPosts" :key="post.id">
-      <h1>{{post.title}}</h1>
-      <p>
-        {{post.body}}
-      </p>
-    </div>
+  <div id="app" class="bg-light pt-5">
+    <b-container fluid="sm">
+
+      <FilterInput/>
+
+      <Spinner
+        v-if="loading"
+      />
+
+      <PostsList
+        v-if="filteredPosts.length && !loading"
+      />
+
+      <EmptyList
+        v-if="!filteredPosts.length && !loading"
+      />
+
+    </b-container>
+      
   </div>
 </template>
 
 <script>
 
 import { mapActions, mapGetters, mapMutations } from 'vuex'
+import PostsList from '@/components/PostsList.vue'
+import FilterInput from '@/components/FilterInput.vue'
+import EmptyList from '@/components/EmptyList.vue'
+import Spinner from '@/components/Spinner.vue'
 
 export default {
   name: 'App',
   components: {
+    FilterInput,
+    PostsList,
+    EmptyList,
+    Spinner
   },
-  computed: mapGetters(["allPosts", "filteredPosts"]),
-  methods: {
-    ...mapActions(["fetchPosts", "filterString"]),
-    ...mapMutations(["filterString"]),
-    filterPosts(event) {
-      this.filterString(event.target.value)
-    }
-  },
+  computed: mapGetters(["filteredPosts", "loading"]),
+  methods: mapActions(["fetchPostsAndAuthors"]),
   async mounted() {
-    this.fetchPosts(10)
+    this.fetchPostsAndAuthors()
   }
 
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  html, body {
+    height: 100%;
+  }
+  #app {
+    min-height: 100%;
+  }
 </style>
