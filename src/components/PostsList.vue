@@ -6,9 +6,9 @@
         class="gy-4 gx-4 pb-5"
     >
         <b-col
-        align-self="start"
-        v-for="post in filteredPosts"
-        :key="post.id"
+            align-self="start"
+            v-for="post in filteredPosts"
+            :key="post.id"
         >
             <Post
                 :post="post"
@@ -25,7 +25,7 @@ import Post from './Post.vue'
 export default {
   name: 'App',
   components: {
-      Post
+    Post
   },
   computed: mapGetters(["filteredPosts"]),
   methods: {},

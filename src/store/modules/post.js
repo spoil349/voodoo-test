@@ -18,28 +18,28 @@ export default {
         }
     },
     actions: {
-        async fetchPostsAndAuthors(ctx) {
-            ctx.commit('SWITCH_LOADING', true)
+        async fetchPostsAndAuthors({ commit }) {
+            commit('SWITCH_LOADING', true)
             const allRes = [
-                new Promise( resolve => fetch('https://jsonplaceholder.typicode.com/posts').then(data => resolve(data.json()))),
-                new Promise( resolve => fetch('https://jsonplaceholder.typicode.com/users').then(data => resolve(data.json())))
+                fetch('https://jsonplaceholder.typicode.com/posts').then(data => data.json()),
+                fetch('https://jsonplaceholder.typicode.com/users').then(data => data.json())
             ]
 
             Promise.all(allRes)
-            .then(data => {
-                const [posts, authors] = data;
+                .then(data => {
+                    const [posts, authors] = data;
 
-                const postsWithAuthors = posts.map(post => {
-                    const author = authors.find(author => author.id === post.userId)
-                    return {...post, author}
-                })
-                
-                ctx.commit('UPDATE_POSTS', postsWithAuthors)
-                ctx.commit('SWITCH_LOADING', false)
-            });
+                    const postsWithAuthors = posts.map(post => {
+                        const author = authors.find(author => author.id === post.userId)
+                        return {...post, author}
+                    })
+                    
+                    commit('UPDATE_POSTS', postsWithAuthors)
+                    commit('SWITCH_LOADING', false)
+                });
         },
-        filterPosts(ctx, string) {
-            ctx.commit('SET_SEARCHING_STRING', string)
+        filterPosts({ commit }, string) {
+            commit('SET_SEARCHING_STRING', string)
         }
     },
     getters: {
