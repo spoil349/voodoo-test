@@ -1,28 +1,56 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app" class="bg-light pt-5">
+    <b-container fluid="sm">
+
+      <FilterInput/>
+
+      <Spinner
+        v-if="loading"
+      />
+
+      <PostsList
+        v-if="filteredPosts.length && !loading"
+      />
+
+      <EmptyList
+        v-if="!filteredPosts.length && !loading"
+      />
+
+    </b-container>
+      
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import { mapActions, mapGetters, mapMutations } from 'vuex'
+import PostsList from '@/components/PostsList.vue'
+import FilterInput from '@/components/FilterInput.vue'
+import EmptyList from '@/components/EmptyList.vue'
+import Spinner from '@/components/Spinner.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    FilterInput,
+    PostsList,
+    EmptyList,
+    Spinner
+  },
+  computed: mapGetters(["filteredPosts", "loading"]),
+  methods: mapActions(["fetchPostsAndAuthors"]),
+  async mounted() {
+    this.fetchPostsAndAuthors()
   }
+
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  html, body {
+    height: 100%;
+  }
+  #app {
+    min-height: 100%;
+  }
 </style>
